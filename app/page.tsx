@@ -4,77 +4,95 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styled from 'styled-components';
 
-const SearchContainer = styled.div`
+const Container = styled.div`
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 80vh;
+  padding: 2rem;
+  background: #f8fafc;
 `;
 
-const SearchBox = styled.input`
-  width: 300px;
+const SearchBox = styled.div`
+  background: white;
+  padding: 2.5rem;
+  border-radius: 16px;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+`;
+
+const Title = styled.h1`
+  font-size: 2.5rem;
+  color: #1e293b;
+  margin-bottom: 1.5rem;
+`;
+
+const Input = styled.input`
+  width: 100%;
   padding: 1rem;
-  font-size: 1.2rem;
-  border: 2px solid #eee;
+  border: 2px solid #e2e8f0;
   border-radius: 8px;
+  font-size: 1.1rem;
   margin-bottom: 1rem;
+  transition: border-color 0.2s;
+  
+  &:focus {
+    outline: none;
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  }
 `;
 
-const SearchButton = styled.button`
-  padding: 1rem 2rem;
-  background: #2563eb;
+const Button = styled.button`
+  background: #3b82f6;
   color: white;
+  padding: 1rem 2rem;
   border: none;
   border-radius: 8px;
+  font-size: 1.1rem;
   cursor: pointer;
+  transition: all 0.2s;
   
   &:hover {
-    background: #1d4ed8;
+    background: #2563eb;
+    transform: translateY(-1px);
+  }
+  
+  &:disabled {
+    background: #94a3b8;
+    cursor: not-allowed;
   }
 `;
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
-  const handleSearch = async () => {
-    setError(''); // Clear previous errors
-    if (!searchTerm.trim()) {
-      setError('Please enter a name');
-      return;
-    }
-
-    try {
-      const response = await fetch(`/api/agents/search?name=${encodeURIComponent(searchTerm)}`);
-      if (!response.ok) {
-        throw new Error('Failed to fetch');
-      }
-
-      const data = await response.json();
-      console.log(data);
-      if (data.agent) {
-        router.push(`/agent/${data.agent.salesperson_reg_num}`);
-      } else {
-        setError('Agent not found');
-      }
-    } catch (err) {
-      setError('An error occurred while searching');
-    }
+  const handleSearch = () => {
+    if (!searchTerm.trim()) return;
+    setIsLoading(true);
+    router.push(`/search?name=${encodeURIComponent(searchTerm)}`);
   };
 
   return (
-    <SearchContainer>
-      <SearchBox
-        type="text"
-        placeholder="Enter salesperson name..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-      />
-      <SearchButton onClick={handleSearch}>Search</SearchButton>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-    </SearchContainer>
+    <Container>
+      <SearchBox>
+        <Title>Find Real Estate Agent</Title>
+        <Input
+          type="text"
+          placeholder="Enter agent name..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+        />
+        <Button onClick={handleSearch} disabled={isLoading}>
+          {isLoading ? 'Searching...' : 'Search'}
+        </Button>
+      </SearchBox>
+    </Container>
   );
 }

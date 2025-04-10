@@ -47,7 +47,7 @@ const Input = styled.input`
 `;
 
 const Button = styled.button`
-  background: #3b82f6;
+  background: #000000;
   color: white;
   padding: 1rem 2rem;
   border: none;
@@ -57,12 +57,16 @@ const Button = styled.button`
   transition: all 0.2s;
   
   &:hover {
-    background: #2563eb;
-    transform: translateY(-1px);
+    background: #333333; /* Slightly lighter black for hover */
   }
-  
+
+  &:active {
+    background: #1a1a1a; /* Darker black for active state */
+    transform: scale(0.98); /* Slightly shrink on click */
+  }
+
   &:disabled {
-    background: #94a3b8;
+    background: #cccccc; /* Gray for disabled state */
     cursor: not-allowed;
   }
 `;

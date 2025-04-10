@@ -42,6 +42,20 @@ export default function AgentPage({ params }: { params: { id: string } }) {
     </div>
       </header>
 
+      <div className="mt-6 mb-6 bg-gray-100 border border-gray-300 rounded-lg p-4 text-sm text-gray-700">
+  <p>
+    <strong>Disclaimer:</strong> All data displayed on this page is sourced from:  
+    <a 
+      href="https://data.gov.sg" 
+      target="_blank" 
+      rel="noopener noreferrer" 
+      className="text-blue-600 hover:underline"
+    >
+       data.gov.sg
+    </a>. Due to potential input errors, industry practices, or other factors, inaccuracies may exist in the original data source. The information provided here is for informational purposes only, and we do not guarantee its accuracy or completeness. Users are advised to verify the information independently.
+  </p>
+</div>
+
       {/* Summary Section */}
       <div className="relative overflow-x-auto">
   <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

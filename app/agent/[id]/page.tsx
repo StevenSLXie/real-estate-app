@@ -23,8 +23,23 @@ export default function AgentPage({ params }: { params: { id: string } }) {
         <h1 className="text-4xl font-bold text-gray-800">{data.summary.salesperson_name}</h1>
         <p className="text-lg text-gray-500">Registration: {data.summary.salesperson_reg_num}</p>
         <p className="mt-2 text-xl text-blue-600 font-semibold">
-          Total Transactions: {data.summary.total_transactions}
+          Total Transactions: {data.summary.total_transactions} (last 2 years)
         </p>
+        {/* Badges Section */}
+    <div className="mt-4 flex flex-wrap justify-center gap-4">
+      {data.badges?.length > 0 ? (
+        data.badges.map((badge: string, index: number) => (
+          <span
+            key={index}
+            className="px-4 py-2 bg-blue-100 text-blue-800 text-sm font-medium rounded-lg shadow"
+          >
+            {badge}
+          </span>
+        ))
+      ) : (
+        <p className="text-gray-500 text-sm">No badges awarded.</p>
+      )}
+    </div>
       </header>
 
       {/* Summary Section */}

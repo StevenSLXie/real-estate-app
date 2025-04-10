@@ -15,7 +15,8 @@ export async function GET() {
     const rentalQuery = `
       SELECT salesperson_name, salesperson_reg_num, COUNT(*) AS transaction_count
       FROM transactions
-      WHERE LOWER(transaction_type) LIKE '%rental%' AND transaction_date >= NOW() - INTERVAL '2 years'
+      WHERE LOWER(transaction_type) LIKE '%rental%' AND transaction_date >= NOW() - INTERVAL '1 years'
+      AND length(salesperson_reg_num) > 1
       GROUP BY salesperson_name, salesperson_reg_num
       ORDER BY transaction_count DESC
       LIMIT 20;
@@ -24,7 +25,8 @@ export async function GET() {
     const saleQuery = `
       SELECT salesperson_name, salesperson_reg_num, COUNT(*) AS transaction_count
       FROM transactions
-      WHERE LOWER(transaction_type) LIKE '%sale%' AND transaction_date >= NOW() - INTERVAL '2 years'
+      WHERE LOWER(transaction_type) LIKE '%sale%' AND transaction_date >= NOW() - INTERVAL '1 years'
+      AND length(salesperson_reg_num) > 1
       GROUP BY salesperson_name, salesperson_reg_num
       ORDER BY transaction_count DESC
       LIMIT 20;

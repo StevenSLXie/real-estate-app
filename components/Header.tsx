@@ -8,13 +8,26 @@ export default function Header() {
   return (
     <header className="bg-gray-800 text-white py-4 shadow-md">
       <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
-        <h1 className="text-xl font-bold">Real Estate Portal</h1>
-        <button
+        <h1
+          className="text-xl font-bold cursor-pointer"
           onClick={() => router.push('/')}
-          className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
         >
-          Home
-        </button>
+          Real Estate Portal
+        </h1>
+        <div className="flex space-x-4">
+          <button
+            onClick={() => router.push('/')}
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
+          >
+            Home
+          </button>
+          <button
+            onClick={() => router.push('/ranking')}
+            className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
+          >
+            Rankings
+          </button>
+        </div>
       </div>
     </header>
   );

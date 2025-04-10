@@ -10,10 +10,7 @@ const pool = new Pool({
   database: 'real_estate'
 });
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string } }
-) {
+export async function GET(request: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const result = await pool.query(`
       WITH recent_trans AS (
@@ -57,7 +54,7 @@ export async function GET(
 
     console.log('Query result:', result.rows[0]?.agent_data); // Debug log
 
-    if (!result.rows[0]) {
+    if (result.rows.length === 0) {
       return NextResponse.json({ error: 'Agent not found' }, { status: 404 });
     }
 

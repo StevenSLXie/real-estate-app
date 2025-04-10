@@ -26,8 +26,9 @@ export async function GET(request: Request) {
           COUNT(*) OVER (PARTITION BY salesperson_reg_num) as total_transactions
         FROM transactions
         WHERE 
-          LOWER(salesperson_name) LIKE $1 OR 
-          salesperson_reg_num = $2
+           transaction_date >= NOW() - INTERVAL '2 years' AND 
+          (LOWER(salesperson_name) LIKE $1 OR 
+          salesperson_reg_num = $2)
       )
       SELECT *,
         COUNT(*) OVER() as total_count 

@@ -139,7 +139,7 @@ interface Transaction {
           <Title>{data.summary.salesperson_name}</Title>
           <Subtitle>Registration: {data.summary.salesperson_reg_num}</Subtitle>
           <TotalTransactions>
-            Total Transactions: {data.summary.total_transactions}
+            Total Transactions within 2 years: {data.summary.total_transactions}
           </TotalTransactions>
         </Header>
   
@@ -154,6 +154,22 @@ interface Transaction {
             </thead>
             <tbody>
               {data.summary.by_property_type?.map(item => (
+                <Tr key={item.type}>
+                  <Td>{item.type}</Td>
+                  <Td>{item.count}</Td>
+                </Tr>
+              ))}
+            </tbody>
+          </Table>
+          <Table>
+            <thead>
+              <tr>
+                <Th>Sale/Rental </Th>
+                <Th>Count</Th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.summary.by_transaction_type?.map(item => (
                 <Tr key={item.type}>
                   <Td>{item.type}</Td>
                   <Td>{item.count}</Td>

@@ -31,19 +31,6 @@ export default function Home() {
             className="block w-full px-5 py-4 text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-lg"
           />
           {/* Disclaimer Section */}
-          <div className="mt-4 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded-lg p-4">
-            <p>
-              <strong>Disclaimer:</strong> Only for agents with at least 1 transaction registered in the past 2 years. All data displayed on this platform is sourced from : 
-              <a 
-                href="https://data.gov.sg" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-blue-600 hover:underline"
-              >
-                data.gov.sg
-              </a>. Due to potential input errors, industry practices, or other factors, inaccuracies may exist in the original data source. Additionally, in a team setting, the agent who registered the transaction might not be the one actually handling or marketing the deal, which could lead to further inaccuracies. The information provided here is for informational purposes only, and we do not guarantee its accuracy or completeness. Users are advised to verify the information independently.
-            </p>
-          </div>
         </div>
         <button
           onClick={handleSearch}
@@ -56,6 +43,19 @@ export default function Home() {
         >
           {isLoading ? 'Searching...' : 'Search'}
         </button>
+        <div className="mt-4 text-sm text-gray-700 bg-gray-100 border border-gray-300 rounded-lg p-4">
+            <p>
+              <strong>Disclaimer:</strong> Only for agents with at least 1 transaction registered in the past 2 years. All data displayed on this platform is sourced from : 
+              <a 
+                href="https://data.gov.sg" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-blue-600 hover:underline"
+              >
+                data.gov.sg
+              </a>. Due to potential input errors, industry practices, or other factors, inaccuracies may exist in the original data source. Additionally, in a team setting, the agent who registered the transaction might not be the one actually handling or marketing the deal, which could lead to further inaccuracies. The information provided here is for informational purposes only, and we do not guarantee its accuracy or completeness. Users are advised to verify the information independently.
+            </p>
+          </div>
       </div>
     </div>
   );

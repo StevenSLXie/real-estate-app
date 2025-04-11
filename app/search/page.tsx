@@ -1,10 +1,10 @@
 // app/search/page.tsx
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-export default function SearchResults() {
+function SearchResultsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
@@ -26,7 +26,7 @@ export default function SearchResults() {
     };
 
     fetchResults();
-  }, []);
+  }, [name]);
 
   if (loading) {
     return (
@@ -63,5 +63,13 @@ export default function SearchResults() {
         </div>
       )}
     </div>
+  );
+}
+
+export default function SearchResults() {
+  return (
+    <Suspense fallback={<div className="text-center">Loading...</div>}>
+      <SearchResultsContent />
+    </Suspense>
   );
 }

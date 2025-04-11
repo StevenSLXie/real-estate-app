@@ -8,7 +8,37 @@ export default function AgentPage({ params }: { params: Promise<{ id: string }> 
     const resolvedParams = use(params); // Unwrap the params promise
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [email, setEmail] = useState('');
+    const [userType, setUserType] = useState('non-agent');
+    const [message, setMessage] = useState('');
   
+    const handleSubscribe = async () => {
+      if (!email.trim()) {
+        setMessage('Please enter a valid email address.');
+        return;
+      }
+  
+      try {
+        const response = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, user_type: userType }),
+        });
+  
+        const data = await response.json();
+        if (response.ok) {
+          setMessage(data.message);
+          setEmail(''); // Clear the input field
+          setUserType('non-agent'); // Reset the dropdown
+        } else {
+          setMessage(data.error || 'Something went wrong. Please try again.');
+        }
+      } catch (error) {
+        console.error('Error subscribing:', error);
+        setMessage('Failed to subscribe. Please try again later.');
+      }
+    };
+    
     useEffect(() => {
       const fetchAgent = async () => {
         setLoading(true);
@@ -64,18 +94,51 @@ export default function AgentPage({ params }: { params: Promise<{ id: string }> 
       </header>
 
       <div className="mt-6 mb-6 bg-gray-100 border border-gray-300 rounded-lg p-4 text-sm text-gray-700">
-  <p>
-    <strong>Disclaimer:</strong> All data displayed on this page is sourced from:  
-    <a 
-      href="https://data.gov.sg" 
-      target="_blank" 
-      rel="noopener noreferrer" 
-      className="text-blue-600 hover:underline"
-    >
-       data.gov.sg
-    </a>. Due to potential input errors, industry practices, or other factors, inaccuracies may exist in the original data source. Additionally, in a team setting, the agent who registered the transaction might not be the one actually handling or marketing the deal, which could lead to further inaccuracies. The information provided here is for informational purposes only, and we do not guarantee its accuracy or completeness. Users are advised to verify the information independently.
-  </p>
-</div>
+        <p>
+          <strong>Disclaimer:</strong> All data displayed on this page is sourced from:  
+          <a 
+            href="https://data.gov.sg" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="text-blue-600 hover:underline"
+          >
+            data.gov.sg
+          </a>. Due to potential input errors, industry practices, or other factors, inaccuracies may exist in the original data source. Additionally, in a team setting, the agent who registered the transaction might not be the one actually handling or marketing the deal, which could lead to further inaccuracies. The information provided here is for informational purposes only, and we do not guarantee its accuracy or completeness. Users are advised to verify the information independently.
+        </p>
+      </div>
+
+      <section className="mb-8 mt-8 bg-gray-100 border border-gray-300 rounded-lg p-6 max-w-md mx-auto">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+          Stay Updated
+        </h2>
+        <p className="text-gray-700 mb-4 text-center">
+          We are redefining the experience of renting, buying, and selling properties. For agents, we are committed to making this platform truly affordable. Stay tuned for exciting updates!
+        </p>
+        <div className="flex flex-col gap-4">
+          <input
+            type="email"
+            placeholder="Enter your email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          />
+          <select
+            value={userType}
+            onChange={(e) => setUserType(e.target.value)}
+            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="non-agent">I am a customer</option>
+            <option value="agent">I am an agent</option>
+          </select>
+          <button
+            onClick={handleSubscribe}
+            className="px-6 py-2 bg-black text-white rounded-lg hover:bg-gray-800"
+          >
+            Subscribe
+          </button>
+        </div>
+        {message && <p className="mt-4 text-sm text-gray-600 text-center">{message}</p>}
+      </section>
 
       {/* Summary Section */}
       <div className="relative overflow-x-auto">

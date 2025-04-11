@@ -2,16 +2,37 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
+import { use } from 'react';
 
-export default function AgentPage({ params }: { params: { id: string } }) {
-  const [data, setData] = useState<any>(null);
+export default function AgentPage({ params }: { params: Promise<{ id: string }> }) {
+    const resolvedParams = use(params); // Unwrap the params promise
+    const [data, setData] = useState<any>(null);
+    const [loading, setLoading] = useState(true);
+  
+    useEffect(() => {
+      const fetchAgent = async () => {
+        setLoading(true);
+        try {
+          const response = await fetch(`/api/agents/${resolvedParams.id}`);
+          const raw_data = await response.json();
+          setData(raw_data);
+        } catch (error) {
+          console.error('Error fetching agent data:', error);
+        } finally {
+          setLoading(false);
+        }
+      };
+  
+      fetchAgent();
+    }, [resolvedParams.id]);
 
-  useEffect(() => {
-    fetch(`/api/agents/${params.id}`)
-      .then((res) => res.json())
-      .then(setData)
-      .catch((err) => console.error('Error fetching agent data:', err));
-  }, [params.id]);
+    if (loading) {
+        return (
+          <div className="flex justify-center items-center min-h-screen">
+            <p className="text-lg text-gray-600 animate-pulse">Loading agent data...</p>
+          </div>
+        );
+      }
 
   if (!data) return <div className="flex justify-center items-center h-screen">Loading...</div>;
 

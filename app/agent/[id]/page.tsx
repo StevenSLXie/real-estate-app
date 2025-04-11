@@ -52,7 +52,7 @@ export default function AgentPage({ params }: { params: { id: string } }) {
       className="text-blue-600 hover:underline"
     >
        data.gov.sg
-    </a>. Due to potential input errors, industry practices, or other factors, inaccuracies may exist in the original data source. The information provided here is for informational purposes only, and we do not guarantee its accuracy or completeness. Users are advised to verify the information independently.
+    </a>. Due to potential input errors, industry practices, or other factors, inaccuracies may exist in the original data source. Additionally, in a team setting, the agent who registered the transaction might not be the one actually handling or marketing the deal, which could lead to further inaccuracies. The information provided here is for informational purposes only, and we do not guarantee its accuracy or completeness. Users are advised to verify the information independently.
   </p>
 </div>
 

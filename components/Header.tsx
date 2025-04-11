@@ -12,20 +12,20 @@ export default function Header() {
           className="text-xl font-bold cursor-pointer"
           onClick={() => router.push('/')}
         >
-          Real Estate Portal
+          AgentTrack
         </h1>
         <div className="flex space-x-4">
           <button
             onClick={() => router.push('/')}
             className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
           >
-            Home
+            Search
           </button>
           <button
             onClick={() => router.push('/ranking')}
             className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
           >
-            Rankings
+            Top 20
           </button>
         </div>
       </div>

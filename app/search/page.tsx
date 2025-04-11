@@ -1,6 +1,6 @@
 // app/search/page.tsx
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function SearchResults() {
@@ -34,6 +34,7 @@ export default function SearchResults() {
   }
 
   return (
+    <Suspense fallback={<div className="text-center">Loading...</div>}>
     <div className="max-w-6xl mx-auto px-4 py-8 bg-gray-50 min-h-screen">
       <h1 className="text-4xl font-bold text-gray-800 mb-8 text-center">
         Find Your Agent
@@ -52,9 +53,6 @@ export default function SearchResults() {
                 router.push(`/agent/${agent.salesperson_reg_num}`)
               }
             >
-              {/* Profile Picture Placeholder */}
-            
-
               {/* Agent Info */}
               <h2 className="text-lg font-semibold text-gray-800 text-center">
                 {agent.salesperson_name}
@@ -97,5 +95,6 @@ export default function SearchResults() {
         </div>
       )}
     </div>
+    </Suspense>
   );
 }

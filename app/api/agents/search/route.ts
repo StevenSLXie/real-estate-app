@@ -7,50 +7,39 @@ const pool = new Pool({
   password: process.env.POSTGRES_PASSWORD,
   host: process.env.POSTGRES_HOST,
   port: parseInt(process.env.POSTGRES_PORT || '5432'),
-  database: process.env.POSTGRES_DATABASE
+  database: process.env.POSTGRES_DATABASE,
 });
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const name = searchParams.get('name')?.toLowerCase() || '';
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = 10;
-    const offset = (page - 1) * limit;
 
+    // Query to search agents by name and count their transactions
     const result = await pool.query(`
-      WITH agent_matches AS (
-        SELECT DISTINCT 
+      WITH recent_transactions AS (
+        SELECT 
           salesperson_name,
           salesperson_reg_num,
-          COUNT(*) OVER (PARTITION BY salesperson_reg_num) as total_transactions
+          COUNT(*) AS total_transactions
         FROM transactions
         WHERE 
-           transaction_date >= NOW() - INTERVAL '2 years' AND 
-          (LOWER(salesperson_name) LIKE $1 OR 
-          salesperson_reg_num = $2)
+          transaction_date >= NOW() - INTERVAL '2 years' AND
+          LOWER(salesperson_name) LIKE $1 AND 
+          LENGTH(salesperson_reg_num) > 1
+        GROUP BY salesperson_name, salesperson_reg_num
       )
-      SELECT *,
-        COUNT(*) OVER() as total_count 
-      FROM agent_matches
-      ORDER BY 
-        total_transactions DESC
-      LIMIT $3 OFFSET $4
-    `, [
-      `%${name}%`,
-      `${name}`,
-      limit,
-      offset
-    ]);
+      SELECT 
+        salesperson_name,
+        salesperson_reg_num,
+        total_transactions
+      FROM recent_transactions
+      ORDER BY total_transactions DESC;
+    `, [`%${name}%`]);
 
+    // Return the results as JSON
     return NextResponse.json({
       agents: result.rows,
-      pagination: {
-        total: result.rows[0]?.total_count || 0,
-        page,
-        limit,
-        pages: Math.ceil((result.rows[0]?.total_count || 0) / limit)
-      }
     });
   } catch (error) {
     console.error('Search error:', error);

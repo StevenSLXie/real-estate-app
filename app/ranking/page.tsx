@@ -44,7 +44,7 @@ export default function RankingsPage() {
 
       {/* New Sale Ratio Table */}
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold text-gray-800 mb-4">New Sale Ratio (for agents with > 15 buy/sale transactions)</h2>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">New Sale Ratio (for agents with at least 15 buy/sale)</h2>
         <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
           <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">

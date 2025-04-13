@@ -38,10 +38,49 @@ export default function RankingsPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
-        Top 20 Agents by Transactions (Last 12 Months)
+        Top 30 Agents (Last 24 Months)
       </h1>
 
-      
+
+      {/* New Sale Ratio Table */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">New Sale Ratio (for agents with > 15 buy/sale transactions)</h2>
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">Rank</th>
+                <th scope="col" className="px-6 py-3">Agent Name</th>
+                <th scope="col" className="px-6 py-3">Registration Number</th>
+                <th scope="col" className="px-6 py-3">New Sale Ratio</th>
+                <th scope="col" className="px-6 py-3">Total Transactions</th>
+              </tr>
+            </thead>
+            <tbody>
+            {rankings.newsale.map((agent, index) => (
+              <tr
+                key={index} // Use the index as the unique key
+                className="odd:bg-white even:bg-gray-50 dark:odd:bg-gray-900 dark:even:bg-gray-800 border-b dark:border-gray-700"
+              >
+                <td className="px-6 py-4 font-medium text-gray-900 dark:text-white">{index + 1}</td>
+                <td className="px-6 py-4">
+                <Link
+                        href={`/agent/${agent.salesperson_reg_num}`}
+                        className="text-blue-600 hover:underline dark:text-blue-400"
+                      >
+                  {agent.salesperson_name}
+                  </Link>
+                </td>
+                <td className="px-6 py-4">{agent.salesperson_reg_num}</td>
+                <td className="px-6 py-4">{(agent.new_sale_ratio * 100).toFixed(0)}%</td>
+                <td className="px-6 py-4">{agent.total_transactions}</td>
+              </tr>
+            ))}
+          </tbody>
+          </table>
+        </div>
+      </section>
+
 
       {/* Sale Transactions Table */}
       <section>

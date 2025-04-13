@@ -4,9 +4,10 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
 export default function RankingsPage() {
-  const [rankings, setRankings] = useState<{ rental: any[]; sale: any[] }>({
+  const [rankings, setRankings] = useState<{ rental: any[]; sale: any[]; newsale: any[] }>({
     rental: [],
     sale: [],
+    newsale: []
   });
   const [loading, setLoading] = useState(true);
 

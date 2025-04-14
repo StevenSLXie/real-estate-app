@@ -15,6 +15,12 @@ export default function Header() {
           AgentTrack
         </h1>
         <div className="flex space-x-4">
+            <button
+                onClick={() => router.push('/property-request')}
+                className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
+            >
+            Find an agent
+          </button>  
           <button
             onClick={() => router.push('/')}
             className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
@@ -25,7 +31,7 @@ export default function Header() {
             onClick={() => router.push('/ranking')}
             className="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-medium"
           >
-            Top 20
+            Top 30
           </button>
         </div>
       </div>

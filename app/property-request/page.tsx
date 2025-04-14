@@ -69,7 +69,7 @@ export default function PropertyRequestPage() {
         <div className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Matching Agents</h2>
           <ul className="space-y-4">
-            {results.map((agent, index) => (
+            {results.filter((agent) => agent.salesperson_name.length > 1).map((agent, index) => (
               <li key={index} className="p-4 border border-gray-300 rounded-lg">
                 <p className="font-bold">
                 <Link

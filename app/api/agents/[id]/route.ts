@@ -34,9 +34,11 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       ),
       thresholds AS (
         SELECT 
+          (SELECT PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY rental_count) FROM rental_stats) AS rental_top_1,
           (SELECT PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY rental_count) FROM rental_stats) AS rental_top_10,
           (SELECT PERCENTILE_CONT(0.8) WITHIN GROUP (ORDER BY rental_count) FROM rental_stats) AS rental_top_20,
           (SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY rental_count) FROM rental_stats) AS rental_top_50,
+          (SELECT PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY sale_count) FROM sale_stats) AS sale_top_1,
           (SELECT PERCENTILE_CONT(0.9) WITHIN GROUP (ORDER BY sale_count) FROM sale_stats) AS sale_top_10,
           (SELECT PERCENTILE_CONT(0.8) WITHIN GROUP (ORDER BY sale_count) FROM sale_stats) AS sale_top_20,
           (SELECT PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY sale_count) FROM sale_stats) AS sale_top_50
@@ -74,6 +76,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
             FROM (
               SELECT 
                 CASE 
+                  WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%rental%') >= (SELECT rental_top_1 FROM thresholds) THEN 'Top 1% (Rental)'
                   WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%rental%') >= (SELECT rental_top_10 FROM thresholds) THEN 'Top 10% (Rental)'
                   WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%rental%') >= (SELECT rental_top_20 FROM thresholds) THEN 'Top 20% (Rental)'
                   WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%rental%') >= (SELECT rental_top_50 FROM thresholds) THEN 'Top 50% (Rental)'
@@ -82,6 +85,7 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
               UNION ALL
               SELECT 
                 CASE 
+                  WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%sale%') >= (SELECT sale_top_10 FROM thresholds) THEN 'Top 1% (Sale)'
                   WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%sale%') >= (SELECT sale_top_10 FROM thresholds) THEN 'Top 10% (Sale)'
                   WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%sale%') >= (SELECT sale_top_20 FROM thresholds) THEN 'Top 20% (Sale)'
                   WHEN (SELECT COUNT(*) FROM recent_trans WHERE LOWER(transaction_type) LIKE '%sale%') >= (SELECT sale_top_50 FROM thresholds) THEN 'Top 50% (Sale)'

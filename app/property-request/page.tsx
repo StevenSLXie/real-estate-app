@@ -64,6 +64,23 @@ export default function PropertyRequestPage() {
         >
         {loading ? 'Processing...' : 'Submit Request'}
         </button>
+
+        {/* How It Works Section */}
+<div className="mt-6 text-sm text-gray-600">
+  <h3 className="font-semibold text-gray-700 mb-2">Examples of how this works:</h3>
+  <ol className="list-decimal list-inside space-y-2">
+    <li>
+      You input something like: <span className="italic">"I want to buy a 5-room HDB in Punggol."</span>
+    </li>
+    <li>
+      We search our database for agents who have helped buyers purchase similar HDB properties in the specified area.
+    </li>
+    <li>
+      Based on relevance (e.g., location) and the number of transactions completed in the past 2 years, we suggest the most suitable agents for your request.
+    </li>
+  </ol>
+</div>
+
       {error && <p className="mt-4 text-red-600">{error}</p>}
       {results.length > 0 && (
         <div className="mt-8">

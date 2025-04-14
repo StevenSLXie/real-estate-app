@@ -84,7 +84,7 @@ export async function POST(request: Request) {
         model: "gpt-4o-mini",
       });
   
-    const sqlQuery = response.choices[0].message.content?.trim();
+    const sqlQuery = response.choices[0].message.content?.trim() || '';
     let cleanedSqlQuery = '';
     const selectIndex = sqlQuery?.toUpperCase().indexOf('SELECT');
     const semicolonIndex = sqlQuery?.indexOf(';');

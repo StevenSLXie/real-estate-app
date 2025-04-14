@@ -36,14 +36,15 @@ export async function POST(request: Request) {
                         3) only return the SQL, not special chars, not explanation;
                         4) for rental, only when room is explicitly mentioned, use ROOM RENTAL, otherwise use WHOLE RENTAL;
                         5) for sale, only when new sale is explicitly mentioned, use NEW SALE, otherwise use RESALE;
-                        5 ) for HDB, the col town only has the following: JURONG EAST, CLEMENTI, GEYLANG, PASIR RIS, SERANGOON
+                        6) if no location info is mentioned, do filter general_location or town;
+                        7 ) for HDB, the col town only has the following: JURONG EAST, CLEMENTI, GEYLANG, PASIR RIS, SERANGOON
                         ,BUKIT PANJANG,SEMBAWANG,ANG MO KIO,YISHUN,QUEENSTOWN
                         ,SENGKANG,JURONG WEST,TENGAH,BEDOK
                         ,TOA PAYOH,WOODLANDS,BUKIT TIMAH,BISHAN,TAMPINES
                         ,HOUGANG,CENTRAL AREA,BUKIT BATOK
                         ,PUNGGOL,QUEESTOWN,MARINE PARADE
-                        ,KALLANG/WHAMPOA,CHOA CHU KANG,BUKIT MERAH; use your geo knowledge to map user requested area to 1 or 2 of these;
-                        6) for condo, col general_loication only has the followng; one line, one enum value:
+                        ,KALLANG/WHAMPOA,CHOA CHU KANG,BUKIT MERAH; use your geo knowledge to map user requested area to 1 or 2 of these if and only if location info is mentioned;
+                        8) for condo, col general_loication only has the followng; one line, one enum value:
                         Katong/ Joo Chiat/ Amber Road
                         Balestier/ Toa Payoh/ Serangoon
                         Little India
@@ -72,9 +73,9 @@ export async function POST(request: Request) {
                         Macpherson/ Braddell
                         Serangoon Garden/ Hougang/ Punggol
                         Orchard/ Cairnhill/ River Valley
-                        use you geo knowledge to match user request to 1 or 2 of these enum value;
-                        7) apply escape to SQL if there is special char. single quotes (') inside a string must be escaped by doubling them ('').;    
-                        8) limit to 10 results;
+                        use you geo knowledge to match user request to 1 or 2 of these enum value if and only if location info is mentioned;
+                        9) apply escape to SQL if there is special char. single quotes (') inside a string must be escaped by doubling them ('').;    
+                        10) limit to 10 results;
         SQL Query:
       `;
   

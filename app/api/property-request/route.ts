@@ -107,7 +107,13 @@ export async function POST(request: Request) {
   
       // Execute the SQL query
       const result = await pool.query(cleanedSqlQuery);
-  
+      if (result.rows.length === 0) {
+        return NextResponse.json({
+          message: 'No matching agents found. Please simplify your request and be more concise.',
+          agents: [],
+        });
+      }
+      
       return NextResponse.json({ agents: result.rows });
     } catch (error) {
       console.error('Error processing property request:', error);

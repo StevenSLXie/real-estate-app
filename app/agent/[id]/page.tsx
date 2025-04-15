@@ -74,10 +74,23 @@ export default function AgentPage({ params }: { params: Promise<{ id: string }> 
         <h1 className="text-4xl font-bold text-gray-800">{data.summary.salesperson_name}</h1>
         <p className="text-lg text-gray-500">CEA Reg No: {data.summary.salesperson_reg_num}</p>
         <p className="text-lg text-gray-500">Agent No: {data.summary.estate_agent_license_no}</p>
-        <p className="text-lg text-gray-500">Agency: {data.summary.estate_agent_name}</p>
+        <p className="text-lg text-gray-500">{data.summary.estate_agent_name}</p>
         <p className="mt-2 text-xl text-blue-600 font-semibold">
           Total Transactions: {data.summary.total_transactions} (last 2 years)
         </p>
+
+       {/* Homepage Link for HUTTONS ASIA PTE. LTD. */}
+      {data.summary.estate_agent_name === 'HUTTONS ASIA PTE. LTD.' && (
+        <a
+          href={`https://agents.huttonsgroup.com/${data.summary.salesperson_reg_num}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-4 inline-flex items-center text-blue-600 hover:underline"
+        >
+          Visit Agent's Homepage
+        </a>
+      )} 
+
         {/* Badges Section */}
     <div className="mt-4 flex flex-wrap justify-center gap-4">
       {data.badges?.length > 0 ? (

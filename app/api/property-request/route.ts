@@ -114,7 +114,8 @@ export async function POST(request: Request) {
         });
       }
       
-      return NextResponse.json({ agents: result.rows });
+      return NextResponse.json({ 
+        agents: result.rows, sqlQuery: cleanedSqlQuery,});
     } catch (error) {
       console.error('Error processing property request:', error);
       return NextResponse.json({ error: 'Failed to process property request.' }, { status: 500 });

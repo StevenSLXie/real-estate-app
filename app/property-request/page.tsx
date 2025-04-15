@@ -9,6 +9,7 @@ export default function PropertyRequestPage() {
   const [results, setResults] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [criteria, setCriteria] = useState('');
 
   const handleSubmit = async () => {
     if (!request.trim()) {
@@ -28,6 +29,8 @@ export default function PropertyRequestPage() {
       const data = await response.json();
       if (response.ok) {
         setResults(data.agents || []);
+        const generatedCriteria = generateCriteria(data.sqlQuery); // Generate the sentence
+        setCriteria(generatedCriteria);
       } else {
         setError(data.error || 'Something went wrong. Please try again.');
       }
@@ -38,6 +41,61 @@ export default function PropertyRequestPage() {
       setLoading(false);
     }
   };
+
+  const generateCriteria = (sqlQuery: string): string => {
+    let transactionType = '';
+    let propertyType = '';
+    let location = '';
+    let represented = '';
+  
+    // Extract transaction_type
+    if (sqlQuery.includes("WHOLE RENTAL")) {
+      transactionType = 'rental';
+    } if (sqlQuery.includes("ROOM RENTAL")) {
+      transactionType = 'room rental';
+    } if (sqlQuery.includes("NEW SALE")) {
+      transactionType = 'new sale';
+    } if (sqlQuery.includes("RESALE")) {
+      transactionType = 'resale';
+    }
+  
+    // Extract property_type
+    if (sqlQuery.includes("HDB")) {
+      propertyType = 'HDB';
+    } if (sqlQuery.includes("CONDOMINIUM_APARTMENTS")) {
+      propertyType = 'condominium';
+    } if (sqlQuery.includes("LANDED")) {
+      propertyType = 'landed property';
+    }
+  
+    // Extract general_location or town
+    const locationMatchIn = sqlQuery.match(/general_location IN \((.*?)\)/);
+    const locationMatchEqual = sqlQuery.match(/general_location = '(.*?)'/);
+    if (locationMatchIn) {
+      location = locationMatchIn[1].replace(/'/g, ''); // Remove single quotes
+    } else if (locationMatchEqual) {
+      location = locationMatchEqual[1].replace(/'/g, ''); // Remove single quotes
+    } else {
+      const townMatchIn = sqlQuery.match(/town IN \((.*?)\)/);
+      const townMatchEqual = sqlQuery.match(/town = '(.*?)'/);
+      if (townMatchIn) {
+        location = townMatchIn[1].replace(/'/g, ''); // Remove single quotes
+      } else if (townMatchEqual) {
+        location = townMatchEqual[1].replace(/'/g, ''); // Remove single quotes
+      }
+    }
+  
+    // Extract represented (buyer or seller)
+    if (sqlQuery.includes("BUYER")) {
+      represented = 'buyers';
+    } else if (sqlQuery.includes("SELLER")) {
+      represented = 'sellers';
+    }
+  
+    // Generate the sentence
+    return `Based on your request, we have found the following agents who have represented ${represented || 'clients'} for ${transactionType} ${propertyType} properties in ${location || 'various regions'}.`;
+  };
+
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-8">
@@ -66,22 +124,26 @@ export default function PropertyRequestPage() {
         </button>
 
         {/* How It Works Section */}
-<div className="mt-6 text-sm text-gray-600">
-  <h3 className="font-semibold text-gray-700 mb-2">Examples of how this works:</h3>
-  <ol className="list-decimal list-inside space-y-2">
-    <li>
-      You input something like: <span className="italic">"I want to buy a 5-room HDB in Punggol."</span>
-    </li>
-    <li>
-      We search our database for agents who have helped buyers purchase similar HDB properties in the specified area.
-    </li>
-    <li>
-      Based on relevance (e.g., location) and the number of transactions completed in the past 2 years, we suggest the most suitable agents for your request.
-    </li>
-  </ol>
-</div>
+        <div className="mt-6 text-sm text-gray-600">
+        <h3 className="font-semibold text-gray-700 mb-2">Examples of how this works:</h3>
+        <ol className="list-decimal list-inside space-y-2">
+            <li>
+            You input something like: <span className="italic">"I want to buy a 5-room HDB in Punggol."</span>
+            </li>
+            <li>
+            We search our database for agents who have helped buyers purchase similar HDB properties in the specified area.
+            </li>
+            <li>
+            Based on relevance (e.g., location) and the number of transactions completed in the past 2 years, we suggest the most suitable agents for your request.
+            </li>
+        </ol>
+        </div>
 
       {error && <p className="mt-4 text-red-600">{error}</p>}
+
+      {criteria && (
+        <p className="mt-6 text-gray-700 italic">{criteria}</p>
+      )}
       {results.length > 0 && (
         <div className="mt-8">
           <h2 className="text-2xl font-semibold text-gray-800 mb-4">Matching Agents</h2>

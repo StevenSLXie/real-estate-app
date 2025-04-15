@@ -46,21 +46,31 @@ export async function GET(request: Request, { params }: { params: Promise<{ id: 
       SELECT 
         json_build_object(
           'summary', (
-            SELECT json_build_object(
-              'salesperson_name', MIN(salesperson_name),
-              'salesperson_reg_num', MIN(salesperson_reg_num),
-              'total_transactions', COUNT(*),
-              'by_property_type', json_agg(DISTINCT jsonb_build_object(
-                'type', property_type,
-                'count', (SELECT COUNT(*) FROM recent_trans t2 WHERE t2.property_type = t1.property_type)
-              )),
-              'by_transaction_type', json_agg(DISTINCT jsonb_build_object(
-                'type', transaction_type,
-                'count', (SELECT COUNT(*) FROM recent_trans t2 WHERE t2.transaction_type = t1.transaction_type)
-              ))
-            )
-            FROM recent_trans t1
-          ),
+      SELECT json_build_object(
+        'salesperson_name', MIN(t1.salesperson_name),
+        'salesperson_reg_num', MIN(t1.salesperson_reg_num),
+        'estate_agent_license_no', (
+          SELECT MIN(a.estate_agent_license_no)
+          FROM agents a
+          WHERE a.registration_no = MIN(t1.salesperson_reg_num)
+        ),
+        'estate_agent_name', (
+          SELECT MIN(a.estate_agent_name)
+          FROM agents a
+          WHERE a.registration_no = MIN(t1.salesperson_reg_num)
+        ),
+        'total_transactions', COUNT(*),
+        'by_property_type', json_agg(DISTINCT jsonb_build_object(
+          'type', t1.property_type,
+          'count', (SELECT COUNT(*) FROM recent_trans t2 WHERE t2.property_type = t1.property_type)
+        )),
+        'by_transaction_type', json_agg(DISTINCT jsonb_build_object(
+          'type', t1.transaction_type,
+          'count', (SELECT COUNT(*) FROM recent_trans t2 WHERE t2.transaction_type = t1.transaction_type)
+        ))
+      )
+      FROM recent_trans t1
+    ),
           'rental_transactions', (
             SELECT coalesce(json_agg(t ORDER BY transaction_date DESC), '[]'::json)
             FROM recent_trans t

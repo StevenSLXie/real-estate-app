@@ -72,7 +72,9 @@ export default function AgentPage({ params }: { params: Promise<{ id: string }> 
       {/* Header Section */}
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-800">{data.summary.salesperson_name}</h1>
-        <p className="text-lg text-gray-500">Registration: {data.summary.salesperson_reg_num}</p>
+        <p className="text-lg text-gray-500">CEA Reg No: {data.summary.salesperson_reg_num}</p>
+        <p className="text-lg text-gray-500">Agent No: {data.summary.estate_agent_license_no}</p>
+        <p className="text-lg text-gray-500">Agency: {data.summary.estate_agent_name}</p>
         <p className="mt-2 text-xl text-blue-600 font-semibold">
           Total Transactions: {data.summary.total_transactions} (last 2 years)
         </p>
